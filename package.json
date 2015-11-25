@@ -1,0 +1,27 @@
+{
+  "name": "basic-flux-dispatcher",
+  "version": "0.0.0",
+  "description": "A basic implementation of the Facebook flux dispatcher",
+  "main": "flux-dispatcher.js",
+  "devDependencies": {
+    "jasmine": "~2.3.2"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nathanbrennan/flux-dispatcher.git"
+  },
+  "keywords": [
+    "dispatch",
+    "dispatcher",
+    "flux",
+    "waitfor"
+  ],
+  "author": "Nathan Brennan",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/nathanbrennan/flux-dispatcher/issues"
+  }
+}
