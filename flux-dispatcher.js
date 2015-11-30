@@ -22,7 +22,7 @@ var Dispatcher = {
   waitFor: function(handlerIDs) {
     // Error out if dispatcher is not dispatching
     if (!this.isDispatching) {
-      throw new Error('Dispatcher.waitFor: Must inly be called while dispatching');
+      throw new Error('Dispatcher.waitFor: Must only be called while dispatching');
       return;
     }
 

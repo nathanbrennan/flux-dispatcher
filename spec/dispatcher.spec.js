@@ -72,6 +72,7 @@ describe('Dispatcher', function () {
       sleep,
       calledOrder = '';
 
+    // TODO: Move to utils include
     sleep = function(wait) {
       var startTime = new Date().getTime();
       for (var i = 1e7; i >= 0; i--) {
@@ -92,8 +93,8 @@ describe('Dispatcher', function () {
       calledOrder += 'Two';
     };
 
-    spyOn(handlers, 'One');
-    spyOn(handlers, 'Two');
+    spyOn(handlers, 'One').and.callThrough();
+    spyOn(handlers, 'Two').and.callThrough();
     handlerIds['One'] = dispatcher.register(handlers['One']);
     handlerIds['Two'] = dispatcher.register(handlers['Two']);
 
@@ -102,7 +103,7 @@ describe('Dispatcher', function () {
       calledOrder += 'Three';
     }
 
-    spyOn(handlers, 'Three');
+    spyOn(handlers, 'Three').and.callThrough();
     dispatcher.register(handlers['Three']);
 
     dispatcher.dispatch();
