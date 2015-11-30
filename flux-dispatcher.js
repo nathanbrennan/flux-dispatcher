@@ -50,11 +50,13 @@ var Dispatcher = {
         // Ensure it's a thing
         // Run it
     }
-  }
-
-  dispatch: function(eventName, payload) {
-    //...
   },
+
+  dispatch: function(payload) {
+    for (var id in this.handlers) {
+      this.handlers[id](payload);
+    }
+  }
 };
 
 // Support module export where available: require('dispatcher')
