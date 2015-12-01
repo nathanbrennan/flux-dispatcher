@@ -68,46 +68,43 @@ describe('Dispatcher', function () {
 
   it('can hold off dispatching one handler until one or more other handlers have run', function() {
     var handlers = {},
-      handlerIds = {},
+      handlerIds = [],
       sleep,
       calledOrder = '';
 
-    // TODO: Move to utils include
-    sleep = function(wait) {
-      var startTime = new Date().getTime();
-      for (var i = 1e7; i >= 0; i--) {
-        var now = new Date().getTime();
-        if ((startTime + wait) > now) {
-          break;
-        }
-      }
-    }
+    // TODO: Move to utils include - OR - Remove it all together
+    // sleep = function(wait) {
+    //   var startTime = new Date().getTime();
+    //   for (var i = 1e7; i >= 0; i--) {
+    //     var now = new Date().getTime();
+    //     if ((startTime + wait) > now) {
+    //       break;
+    //     }
+    //   }
+    // }
 
-    handlers['One'] = function() {
-      sleep(2000);
-      calledOrder += 'One';
-    };
-
-    handlers['Two'] = function() {
-      sleep(3000);
-      calledOrder += 'Two';
-    };
-
-    spyOn(handlers, 'One').and.callThrough();
-    spyOn(handlers, 'Two').and.callThrough();
-    handlerIds['One'] = dispatcher.register(handlers['One']);
-    handlerIds['Two'] = dispatcher.register(handlers['Two']);
-
-    handlers['Three'] = function() {
+    handlers['First'] = function() {
       dispatcher.waitFor(handlerIds);
-      calledOrder += 'Three';
+      calledOrder += 'First';
     }
 
-    spyOn(handlers, 'Three').and.callThrough();
-    dispatcher.register(handlers['Three']);
+    dispatcher.register(handlers['First']);
+
+    handlers['Second'] = function() {
+      // sleep(3000);
+      calledOrder += 'Second';
+    };
+
+    handlers['Third'] = function() {
+      // sleep(2000);
+      calledOrder += 'Third';
+    };
+
+    handlerIds.push(dispatcher.register(handlers['Second']));
+    handlerIds.push(dispatcher.register(handlers['Third']));
 
     dispatcher.dispatch();
 
-    expect(calledOrder).toBe('OneTwoThree');
+    expect(calledOrder).toBe('SecondThirdFirst');
   });
 });

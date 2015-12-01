@@ -34,7 +34,7 @@ var Dispatcher = {
 
       // Check if the handler has started
       if (this.startedHandlers[id]) {
-        // If the handler id still running, that indicates a circular dependency
+        // If the handler id still running, this indicates a circular dependency
         if (!this.finishedHandlers[id]) {
           // YOU ARE HERE
           // YOU ARE HERE
