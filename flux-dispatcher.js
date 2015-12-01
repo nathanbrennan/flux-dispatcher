@@ -53,9 +53,11 @@ var Dispatcher = {
   },
 
   dispatch: function(payload) {
+    this.isDispatching = true;
     for (var id in this.handlers) {
       this.handlers[id](payload);
     }
+    this.isDispatching = false;
   }
 };
 
