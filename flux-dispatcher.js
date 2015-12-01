@@ -1,8 +1,8 @@
 var Dispatcher = {
   idIncrementor: 0,
-  isDispatching: false,
-  startedHandlers: {},
-  finishedHandlers: {},
+  _isDispatching: false,
+  _startedHandlers: {},
+  _finishedHandlers: {},
   handlers: {},
 
   register: function(handler) {
@@ -21,7 +21,7 @@ var Dispatcher = {
 
   waitFor: function(handlerIDs) {
     // Error out if dispatcher is not dispatching
-    if (!this.isDispatching) {
+    if (!this._isDispatching) {
       throw new Error('Dispatcher.waitFor: Must only be called while dispatching');
       return;
     }
@@ -33,9 +33,9 @@ var Dispatcher = {
       // Ensure that it is not currently running
 
       // Check if the handler has started
-      if (this.startedHandlers[id]) {
+      if (this._startedHandlers[id]) {
         // If the handler id still running, this indicates a circular dependency
-        if (!this.finishedHandlers[id]) {
+        if (!this._finishedHandlers[id]) {
           // YOU ARE HERE
           // YOU ARE HERE
           // YOU ARE HERE
@@ -53,11 +53,21 @@ var Dispatcher = {
   },
 
   dispatch: function(payload) {
-    this.isDispatching = true;
+    this._startDistatching();
     for (var id in this.handlers) {
       this.handlers[id](payload);
     }
-    this.isDispatching = false;
+    this._finishDispatching();
+  },
+
+  _startDistatching: function() {
+    this._startedHandlers: {},
+    this._finishedHandlers: {},
+    this._isDispatching = true;
+  },
+
+  _finishDispatching:function() {
+    this._isDispatching = false;
   }
 };
 
