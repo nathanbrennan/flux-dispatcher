@@ -3,12 +3,12 @@ var dispatcher = require('../flux-dispatcher.js');
 describe('Dispatcher', function () {
   it('can register a handlers and return the key for it', function() {
     var fooHandler = function() {
-      console.log('Foo!');
+      // Foo handler code
     };
 
     var id = dispatcher.register(fooHandler);
 
-    expect(dispatcher.handlers[id]).toBe(fooHandler);
+    expect(dispatcher._handlers[id]).toBe(fooHandler);
   });
 
   it('can dispatch all handler, passing a payload', function() {
@@ -72,17 +72,6 @@ describe('Dispatcher', function () {
       sleep,
       calledOrder = '';
 
-    // TODO: Move to utils include - OR - Remove it all together
-    // sleep = function(wait) {
-    //   var startTime = new Date().getTime();
-    //   for (var i = 1e7; i >= 0; i--) {
-    //     var now = new Date().getTime();
-    //     if ((startTime + wait) > now) {
-    //       break;
-    //     }
-    //   }
-    // }
-
     handlers['First'] = function() {
       dispatcher.waitFor(handlerIds);
       calledOrder += 'First';
@@ -91,12 +80,10 @@ describe('Dispatcher', function () {
     dispatcher.register(handlers['First']);
 
     handlers['Second'] = function() {
-      // sleep(3000);
       calledOrder += 'Second';
     };
 
     handlers['Third'] = function() {
-      // sleep(2000);
       calledOrder += 'Third';
     };
 

@@ -3,20 +3,20 @@ var Dispatcher = {
   _isDispatching: false,
   _startedHandlers: {},
   _finishedHandlers: {},
-  handlers: {},
+  _handlers: {},
 
   register: function(handler) {
     // Create ID for this handler
     var handlerID = 'handlerID_' + this.idIncrementor++;
     // Register the handler against the ID
-    this.handlers[handlerID] = handler;
+    this._handlers[handlerID] = handler;
     // return the ID for use with unregister
     return handlerID;
   },
 
   unregister: function(handlerID) {
     // TODO: Should this error if handlerID is unknown
-    delete this.handlers[handlerID];
+    delete this._handlers[handlerID];
   },
 
   waitFor: function(handlerIDs) {
@@ -30,44 +30,55 @@ var Dispatcher = {
     for (var i = 0; i < handlerIDs.length; i++) {
       var id = handlerIDs[i];
 
-      // Ensure that it is not currently running
-
       // Check if the handler has started
       if (this._startedHandlers[id]) {
-        // If the handler id still running, this indicates a circular dependency
+        // If the handler is still running, this indicates a circular dependency
         if (!this._finishedHandlers[id]) {
-          // YOU ARE HERE
-          // YOU ARE HERE
-          // YOU ARE HERE
-          // YOU ARE HERE
-          // YOU ARE HERE
-          throw new Error('Dispatcher.waitFor: Circular dependency found whiole waiting for')
+          throw new Error('Dispatcher.waitFor: Circular dependency found while waiting for' + id);
         }
 
-        // If it has already run, don't run it
+        // Otherwise, it has already run (So don't run it)
+        continue;
       }
-      // If it hasn't run yet
-        // Ensure it's a thing
-        // Run it
+
+      if (!this._handlers[id]) {
+        throw new Error('Dispatcher.waitFor: No handler found with id' +  id);
+      }
+
+      this._callHandler(id);
     }
   },
 
   dispatch: function(payload) {
-    this._startDistatching();
-    for (var id in this.handlers) {
-      this.handlers[id](payload);
+    this._startDistatching(payload);
+
+    for (var id in this._handlers) {
+      if (this._startedHandlers[id]) {
+        continue;
+      }
+
+      this._callHandler(id);
     }
+
     this._finishDispatching();
   },
 
-  _startDistatching: function() {
-    this._startedHandlers: {},
-    this._finishedHandlers: {},
+  _startDistatching: function(payload) {
+    this._currentPayload = payload;
+    this._startedHandlers = {};
+    this._finishedHandlers = {};
     this._isDispatching = true;
   },
 
   _finishDispatching:function() {
+    delete this._currentPayload;
     this._isDispatching = false;
+  },
+
+  _callHandler: function(id) {
+    this._startedHandlers[id] = true;
+    this._handlers[id](this._currentPayload);
+    this._finishedHandlers[id] = true;
   }
 };
 
