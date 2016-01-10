@@ -11,6 +11,12 @@ describe('Dispatcher', function () {
     expect(dispatcher._handlers[id]).toBe(fooHandler);
   });
 
+  it('Requires an action when dispatching handlers', function() {
+    //YOU ARRE HERE
+    //YOU ARRE HERE
+    //YOU ARRE HERE
+  })
+
   it('can dispatch all handler, passing a payload', function() {
     var handlers,
       handlersIds;
